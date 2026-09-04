@@ -9,8 +9,12 @@ from models.schema import AgentSchema
 # ------------------------------------ AI Agent Code ------------------------------------ #
 
 def curate_question(state: AgentSchema) -> AgentSchema:  
-    return state
-    user_q
+
+    user_question = state.user_question # Bcz this is a pydantic model object
+
+    llm = pick_llm("low") #pick the appropraite LLM based on the level of the question.
+
+    response = llm.invoke(f"curate the following question: {user_question}.")
   
 
 
