@@ -15,6 +15,14 @@ def curate_question(state: AgentSchema) -> AgentSchema:
     llm = pick_llm("low") #pick the appropraite LLM based on the level of the question.
 
     response = llm.invoke(f"curate the following question: {user_question}.")
+
+    state.curated_ques = response
+    return state
+
+
+def prompt_query_context(state: AgentSchema) -> AgentSchema:
+
+    curate_question = state.curated_ques 
   
 
 

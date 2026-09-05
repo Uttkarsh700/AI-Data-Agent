@@ -1,29 +1,53 @@
 from langchain_openai import ChatOpenAI, ChatAnthropic
+from langchain_openai import ChatOpenAI
+from langchain_anthropic import ChatAnthropic
 from dotenv import load_dotenv
+import os
+
 load_dotenv()
 
 def pick_llm(Level: str):
 
-    """ 
-    Picks the appropriate LLM based on the user's level of the question 
-    
-    Args :
-      level(str) : The level of the question, can be easy, medium or hard.
+    """
+    Picks the appropriate LLM based on the user's level of the question.
 
-    Returns :
-      The name of llm to be used.
+    Args:
+        Level (str): low, medium or high
+
+    Returns:
+        LLM object
     """
 
     if Level.lower() == "low":
-        return ChatAnthropic()(Model="claude-2", temperature=0)
+        return ChatAnthropic(
+            model="claude-opus-4-6",
+            temperature=0,
+            api_key=os.getenv("AGENTROUTER_API_KEY"),
+            base_url="https://agentrouter.org"
+        )
+
     elif Level.lower() == "medium":
-        return ChatOpenAI(temperature=0.9, model_name="gpt-3.5-turbo")
+        return ChatOpenAI(
+            model="gpt-5.5",
+            temperature=0.9,
+            api_key=os.getenv("AGENTROUTER_API_KEY"),
+            base_url="https://agentrouter.org/v1"
+        )
+
     elif Level.lower() == "high":
-        return ChatOpenAI(temperature=0.9, model_name="gpt-4")
+        return ChatOpenAI(
+            model="gpt-5.5",
+            temperature=0.9,
+            api_key=os.getenv("AGENTROUTER_API_KEY"),
+            base_url="https://agentrouter.org/v1"
+        )
+
     else:
         raise ValueError(f"Invalid level: {Level}")
 
-    return pick_llm
 
 llm_obj = pick_llm("low")
-print(llm_obj.invoke("hello"))
+
+response = llm_obj.invoke("hello")
+
+print(response.content)
